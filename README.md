@@ -41,12 +41,12 @@ WHERE order_date IS NOT NULL
 GROUP BY 
     YEAR(order_date), 
     MONTH(order_date);
-'''
+```
 
 ### 2️⃣ Cumulative Analysis
 > Performs cumulative calculations, such as calculating the running total of revenue over time to understand financial growth.
 
-,,, sql
+``` sql
 CREATE VIEW gold.cumulative_sales_report AS
 WITH monthly_summary AS (
     SELECT
@@ -77,10 +77,10 @@ SELECT
         ORDER BY order_month
     ) AS cumulative_avg_price
 FROM monthly_summary;
-,,,
+```
 ### 3️⃣ Performance Analysis
 >Assesses the performance of products, categories, or overall sales (e.g., identifying top-selling items or lowest-performing inventory).
-,,, sql
+``` sql
 create view  gold.performance as 
 WITH yearly_product_sales AS (
     SELECT
@@ -110,10 +110,10 @@ SELECT
      else ' no chang'
      end as py_change
 FROM yearly_product_sales
-,,,
+```
 ### 4️⃣ Part-to-Whole Analysis
 >Determines the proportion of individual components relative to the whole (e.g., each category's percentage contribution to total sales).
-,,,sql
+```sql
 
 create view gold.part_of_whole as
 with category_sales as(
@@ -131,11 +131,11 @@ total_sales,
 sum (total_sales) over () overall_sales,
 concat(round((cast(total_sales as float)/sum (total_sales) over () )*100 , 2) , '%') as percentage_of_total
 from category_sales
-,,,
+```
 
 ### 5️⃣ Data Segmentation analysis
 >Segments customers or products based on specific behaviors or attributes (e.g., categorizing products into cost ranges).
-,,,sql
+```sql
 CREATE VIEW gold.data_segment AS
 WITH product_segment AS (
     SELECT 
@@ -155,12 +155,12 @@ SELECT
     cost_range
 FROM product_segment
 GROUP BY cost_range;
-,,,
+```
 ## 📋 Analytical Reports
 >Two comprehensive reports designed to assist stakeholder decision-making:
 ### 📦 Product Report
 >Provides a consolidated view of inventory status, total units sold, generated revenue, and profit margins per product.
-,,,sql
+```sql
 create view  gold.report_product as
 WITH base_query AS (
     SELECT 
@@ -229,10 +229,10 @@ SELECT
         ELSE total_sales / lifespan
     END AS avg_monthly_revenue
 FROM product_aggregations;
-,,,
-###👤 Customer Report
+```
+### 👤 Customer Report
 >Summarizes customer purchasing behavior, including first/last purchase dates, lifetime order frequency, and total lifetime value (LTV).
-,,,sql
+```sql
 create view gold.customer_report as 
 with base_query as (
     select 
@@ -302,9 +302,15 @@ select
         else total_sales / lifespan
     end as avg_monthly_spend
 from customer_aggregation;
-,,,
-##🚀 How to Run the Project
-Open the initialization script (00_init_database.sql) in SQL Server Management Studio (SSMS).
+```
+## 🚀 How to Run the Project
+1- Open the initialization script (00_init_database.sql) in SQL Server Management Studio (SSMS).
+
+2- Ensure your local CSV file paths match the BULK INSERT statements in the script.
+
+3- Run the script to drop/recreate the DataWarehouseAnalytics database, build the tables, and load the datasets.
+
+4- Execute any of the analysis queries above to see the results.
 
 Ensure your local CSV file paths match the BULK INSERT statements in the script.
 
